@@ -1,0 +1,7 @@
+name: BlockExplosionPVP
+version: 1.0
+main: com.longz3r.BlockExplosionPVP.BlockExplosionPVP
+api-version: '1.21'
+description: Block explosion damage to Player from crystals, TNT minecarts, beds, and respawn anchors.
+author: Long Zer
+folia-supported: true

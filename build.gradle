@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.longz3r'
+version = '1.0'
+description = 'Block explosion damage to Player from crystals, TNT minecarts, beds, and respawn anchors.'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+}
+
+dependencies {
+    // ADD THIS: The Paper API for Bukkit/Spigot/Paper compatibility
+    compileOnly 'io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT'
+    
+    // The Folia API you already had
+    // compileOnly 'dev.folia:folia-api:1.21.6-R0.1-SNAPSHOT'
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+shadowJar {
+    archiveBaseName = 'BlockExplosionPVP'
+    archiveVersion = ''
+    archiveClassifier = ''
+}
+
+// The 'processResources' task is what copies files like plugin.yml into your JAR
+// We make sure the JAR is built after those resources are processed.
+// build {
+//     dependsOn shadowJar
+// }
