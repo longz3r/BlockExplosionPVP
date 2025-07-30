@@ -29,7 +29,6 @@ public final class BlockExplosionPVP extends JavaPlugin implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof org.bukkit.entity.Player) {
-            getLogger().warning(event.getDamageSource().getCausingEntity().getName());
             if ((event.getDamager() instanceof EnderCrystal)) {
                 
 
