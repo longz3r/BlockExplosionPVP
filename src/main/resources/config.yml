@@ -1,0 +1,18 @@
+# DO NOT TOUCH THE LINE BELOW
+ConfigVersion: 1
+# DO NOT TOUCH THE LINE ABOVE
+
+# Do you want to log all damage events to the console?
+LogCancelledDamageToConsole: true
+
+# PLEASE RESTART AFTER CHANGING THESE VALUES
+
+# Damage multipliers for entities and blocks explosions (float numbers are allowed, disabled if set to 0)
+EndCrystalDamageMultiplier: 0
+TNTMinecartDamageMultiplier: 0
+
+# If true the player who caused the End Crystal explosion will receive the original damage instead of damage multiplier.
+EndCrystalDamageCausingPlayer: true
+
+# Block explosion damage to Player from beds and respawn anchors.
+BlockExplosionDamageMultiplier: 0

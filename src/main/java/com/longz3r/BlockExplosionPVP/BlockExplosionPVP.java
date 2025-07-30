@@ -8,11 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public final class BlockExplosionPVP extends JavaPlugin implements Listener {
+    private FileConfiguration config;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        config = getConfig();
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("BlockExplosionPVP enabled.");
     }
@@ -23,10 +27,35 @@ public final class BlockExplosionPVP extends JavaPlugin implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onCrystalDamage(EntityDamageByEntityEvent event) {
-        if ((event.getDamager() instanceof EnderCrystal || event.getDamager() instanceof ExplosiveMinecart) && event.getEntity() instanceof org.bukkit.entity.Player) {
-            getLogger().info("Cancelled damage from " + event.getDamager().getType() + " on " + event.getEntity().getName());
-            event.setDamage(0.0);
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof org.bukkit.entity.Player) {
+            getLogger().warning(event.getDamageSource().getCausingEntity().getName());
+            if ((event.getDamager() instanceof EnderCrystal)) {
+                
+
+                if (config.getBoolean("EndCrystalDamageCausingPlayer", false)) {
+                    if (!(event.getDamageSource().getCausingEntity().getName() == event.getEntity().getName())) {
+                        // If the EnderCrystal is not caused by the player, apply the damage multiplier
+                        event.setDamage(event.getDamage() * config.getDouble("EndCrystalDamageMultiplier", 0));
+                        if (config.getBoolean("LogCancelledDamageToConsole", true)) {
+                            getLogger().info(event.getDamage() * config.getDouble("EndCrystalDamageMultiplier", 0) + " damage from " + event.getDamager().getType() + " was applied on " + event.getEntity().getName());
+                        }
+                    } else {
+                        getLogger().info(event.getEntity().getName() + " caused the EnderCrystal explosion, original damage applied.");
+                    }
+                } else {
+                    event.setDamage(event.getDamage() * config.getDouble("EndCrystalDamageMultiplier", 0));
+                    if (config.getBoolean("LogCancelledDamageToConsole", true)) {
+                        getLogger().info(event.getDamage() * config.getDouble("EndCrystalDamageMultiplier", 0) + " damage from " + event.getDamager().getType() + " was applied on " + event.getEntity().getName());
+                    }
+                }
+
+            } else if ((event.getDamager() instanceof ExplosiveMinecart)) {
+                event.setDamage(event.getDamage() * config.getDouble("TNTMinecartDamageMultiplier", 0));
+                if (config.getBoolean("LogCancelledDamageToConsole", true)) {
+                    getLogger().info(event.getDamage() * config.getDouble("TNTMinecartDamageMultiplier", 0) + " damage from " + event.getDamager().getType() + " was applied on " + event.getEntity().getName());
+                }
+            }
         }
     }
 
@@ -35,8 +64,10 @@ public final class BlockExplosionPVP extends JavaPlugin implements Listener {
     public void onBlockExplosionDamage(EntityDamageByBlockEvent event) {
         DamageType damageType = event.getDamageSource().getDamageType();
         if (damageType.equals(DamageType.BAD_RESPAWN_POINT) && event.getEntity() instanceof org.bukkit.entity.Player)  {
-            event.setDamage(0.0);
-            getLogger().info("Cancelled Bed/Respawn Anchor explosion damage on" + event.getEntity().getName());
+            event.setDamage(event.getDamage() * config.getDouble("BlockExplosionDamageMultiplier", 0));
+            if (config.getBoolean("LogCancelledDamageToConsole", true)) {
+                getLogger().info(event.getDamage() * config.getDouble("BlockExplosionDamageMultiplier", 0) + " Bed/Respawn Anchor explosion damage from was applied on " + event.getEntity().getName());
+            }
         }
     }
 }
